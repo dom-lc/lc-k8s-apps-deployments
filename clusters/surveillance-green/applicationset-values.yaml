@@ -16,7 +16,7 @@ applicationset:
         - name: reflector
           version: reflector-v0.1.0
         - name: actions-runner-system
-          version: actions-runner-system-v0.1.0
+          version: actions-runner-system-v0.2.0
         - name: external-secrets
           version: external-secrets-v0.1.0
   # This is the list of Helm value files to use for the application
