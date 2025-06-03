@@ -1,0 +1,69 @@
+# Values for an application.yaml file in a Helm chart
+application:
+  enabled: false
+  name: app-name
+  sources:
+    chartRepo: 
+      # Repository containing your your Helm Charts
+      repoUrl: https://github.com/username/chartRepository.git
+      # Here I put my app version since using release-please
+      targetRevision: app-name-v0.0.0
+    valuesRepo:
+      # Repository containing your your Helm Values files
+      repoUrl: https://github.com/username/valuesRepository.git
+      targetRevision: HEAD
+      # Name of values file
+      valuesFile: values.yaml
+
+# Values for an applicationset.yaml file in a Helm chart
+applicationset:
+  enabled: false
+  name: argocd-applicationset
+  generators:
+    # This is the list of generators for the ApplicationSet
+    - git:
+        # The URL of the Git repository containing the application manifests
+        repoURL: https://github.com/your-org/your-repo.git
+        # The branch or commit SHA to use for the repository
+        revision: HEAD
+        # This is a list of paths to the directories in the Git repository
+        directories:
+          - path-to-directory-1
+          - path-to-directory-2
+        # This is a list of paths you want to exclude from the generator
+        # Note that this path also needs to be part of your generators.git.directories
+        excludeDirectories:
+          - path-to-exclude-1
+          - path-to-exclude-2
+  # This is the list of Helm value files to use for the application
+  # Note that these files are relative to the root of the Git repository
+  # and should be present in the directories specified above
+  helm:
+    valuesFiles:
+      - values.yaml
+  # Sync options for the application
+  # Note that these options are used for the sync policy of the application
+  syncOptions:
+    - CreateNamespace=true
+    - PruneLast=true
+    - ApplyOutOfSyncOnly=true
+    - Validate=false
+    - Replace=true
+    - SkipDryRunOnMissingResource=true
+    - SkipDryRunOnNotFound=true
+    - PrunePropagationPolicy=Background
+    - PrunePropagationPolicy=Foreground
+    - ServerSideApply=true
+  ignoreDifferences:
+    # This is the list of fields to ignore for the application
+    # Note that these fields are used for the ignore differences policy of the application
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/replicas
+        - /spec/template/spec/containers/0/image
+

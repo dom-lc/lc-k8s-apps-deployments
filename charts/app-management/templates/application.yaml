@@ -1,0 +1,29 @@
+{{- if .Values.application.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.application.name }}
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: {{ .Values.application.sources.chartRepo.repoUrl }}
+      targetRevision: {{ .Values.application.sources.chartRepo.targetRevision }}
+      path: charts/{{ .Values.application.name }}
+      helm:
+        valueFiles:
+          - $values/{{ .Values.application.name }}/{{ .Values.application.sources.valuesRepo.valuesFile }}
+    - repoURL: {{ .Values.application.sources.valuesRepo.repoUrl }}
+      targetRevision: {{ .Values.application.sources.valuesRepo.targetRevision }}
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+{{- end }}

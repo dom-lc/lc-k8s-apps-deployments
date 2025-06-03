@@ -1,0 +1,68 @@
+{{- if .Values.applicationset.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: {{ .Values.applicationset.name }}
+  namespace: argocd
+spec:
+  generators:
+  {{- range .Values.applicationset.generators }}
+    - git:
+        repoURL: {{ .git.repoURL }}
+        revision: {{ .git.revision }}
+        directories:
+        {{- $excludes := .git.excludeDirectories | default list }}
+          {{- range .git.directories }}
+          - path: {{ . }}
+            {{- if has . $excludes }}
+            exclude: true
+            {{- end }}
+        {{- end }}
+  {{- end }}
+  template:
+    metadata:
+      name: '{{`{{path.basename}}`}}'
+      namespace: '{{`{{path.basename}}`}}'
+    spec:
+      project: default
+      source:
+        repoURL: {{ (index .Values.applicationset.generators 0).git.repoURL }}
+        targetRevision: {{ (index .Values.applicationset.generators 0).git.revision }}
+        path: 'charts/{{`{{path.basename}}`}}'
+        helm:
+          valueFiles:
+            {{- range .Values.applicationset.helm.valuesFiles }}
+            - {{ . }}
+            {{- end }}
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{`{{path.basename}}`}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        {{- range .Values.applicationset.syncOptions }}
+          - {{ . }}
+        {{- end }}
+      ignoreDifferences:
+      {{- range .Values.applicationset.ignoreDifferences }}
+        - group: {{ .group | quote }}
+          kind: {{ .kind | quote }}
+          {{- if .namespace }}
+          namespace: {{ .namespace | quote }}
+          {{- end }}
+          {{- if .jsonPointers }}
+          jsonPointers:
+          {{- range .jsonPointers }}
+            - {{ . | quote }}
+          {{- end }}
+          {{- end }}
+          {{- if .jqPathExpressions }}
+          jqPathExpressions:
+          {{- range .jqPathExpressions }}
+            - {{ . | quote }}
+          {{- end }}
+          {{- end }}
+      {{- end}}
+{{- end }}
