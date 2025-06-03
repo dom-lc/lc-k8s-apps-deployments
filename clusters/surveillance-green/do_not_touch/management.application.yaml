@@ -7,7 +7,7 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: https://github.com/dom-lc/k8s-apps-deployments.git
+    - repoURL: https://github.com/dom-lc/lc-k8s-apps-deployments.git
       targetRevision: list_generator
       path: charts/app-management
       helm:
