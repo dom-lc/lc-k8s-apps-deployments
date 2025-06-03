@@ -1,0 +1,25 @@
+# Source: app-management/templates/application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: core-management-app
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/dom-lc/k8s-apps-deployments.git
+      targetRevision: list_generator
+      path: charts/app-management
+      helm:
+        valueFiles:
+          - ../../clusters/surveillance-green/applicationset-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

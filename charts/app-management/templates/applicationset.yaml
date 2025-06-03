@@ -6,37 +6,31 @@ metadata:
   namespace: argocd
 spec:
   generators:
-  {{- range .Values.applicationset.generators }}
-    - git:
-        repoURL: {{ .git.repoURL }}
-        revision: {{ .git.revision }}
-        directories:
-        {{- $excludes := .git.excludeDirectories | default list }}
-          {{- range .git.directories }}
-          - path: {{ . }}
-            {{- if has . $excludes }}
-            exclude: true
-            {{- end }}
-        {{- end }}
-  {{- end }}
+    - list:
+          elements:
+          {{- range .Values.applicationset.generators.list.elements }}
+            - name: {{ .name }}
+              version: {{ .version }}
+          {{- end }}
   template:
     metadata:
-      name: '{{`{{path.basename}}`}}'
-      namespace: '{{`{{path.basename}}`}}'
+      name: '{{`{{name}}`}}'
+      namespace: '{{`{{name}}`}}'
     spec:
       project: default
-      source:
-        repoURL: {{ (index .Values.applicationset.generators 0).git.repoURL }}
-        targetRevision: {{ (index .Values.applicationset.generators 0).git.revision }}
-        path: 'charts/{{`{{path.basename}}`}}'
-        helm:
-          valueFiles:
-            {{- range .Values.applicationset.helm.valuesFiles }}
-            - {{ . }}
-            {{- end }}
+      sources:
+        - repoURL: {{ .Values.applicationset.sources.chartRepo.repoUrl }}
+          targetRevision: '{{`{{version}}`}}'
+          path: 'charts/{{`{{name}}`}}'
+          helm:
+            valueFiles:
+              - $values/{{`{{name}}`}}/{{ $.Values.applicationset.sources.valuesRepo.valuesFile }}
+        - repoURL: {{ .Values.applicationset.sources.valuesRepo.repoUrl }}
+          targetRevision: {{ .Values.applicationset.sources.valuesRepo.targetRevision }}
+          ref: values
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{`{{path.basename}}`}}'
+        namespace: '{{`{{name}}`}}'
       syncPolicy:
         automated:
           prune: true

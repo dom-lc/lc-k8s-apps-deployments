@@ -1,22 +1,36 @@
 applicationset:
   enabled: true
-  name: core-applicationset
+  name: k8s-apps
+  chartRepo: https://github.com/dom-lc/lc-k8s-apps.git
   generators:
-    # This is the list of generators for the ApplicationSet
-    - git:
-        # The URL of the Git repository containing the application manifests
-        repoURL: https://github.com/dom-lc/lc-k8s-apps.git
-        # The branch or commit SHA to use for the repository
-        revision: surveillance-green
-        # This is a list of paths to the directories in the Git repository
-        directories:
-          - 'charts/*'
+    # The List generator allows you to target Argo CD Applications to clusters based on a fixed list of any chosen key/value element pairs.
+    # We will be using the list to choose the targetRevion for each application
+    list:
+      # Please make sure all applications under your directories are included 
+      # specially if you are using expressions like *
+      elements:
+        - name: argocd
+          version: argocd-v0.1.0
+        - name: cert-manager
+          version: cert-manager-v0.1.0
+        - name: reflector
+          version: reflector-v0.1.0
+        - name: actions-runner-system
+          version: actions-runner-system-v0.1.0
+        - name: external-secrets
+          version: external-secrets-v0.1.0
   # This is the list of Helm value files to use for the application
   # Note that these files are relative to the root of the Git repository
   # and should be present in the directories specified above
-  helm:
-    valuesFiles:
-      - values-surveillance-green.yaml
+  sources:
+    chartRepo: 
+      repoUrl: https://github.com/dom-lc/lc-k8s-apps.git
+    valuesRepo:
+      # Repository containing your your Helm Values files
+      repoUrl: https://github.com/dom-lc/lc-k8s-apps-values.git
+      targetRevision: HEAD
+      # Name of values file
+      valuesFile: values-surveillance-green.yaml
   # Sync options for the application
   # Note that these options are used for the sync policy of the application
   syncOptions:
