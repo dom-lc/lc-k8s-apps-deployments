@@ -14,7 +14,7 @@ applicationset:
         - name: cert-manager
           version: cert-manager-v0.1.0
         - name: reflector
-          version: reflector-v0.1.0
+          version: reflector-v0.2.0
         - name: actions-runner-system
           version: actions-runner-system-v0.1.0
         - name: external-secrets
