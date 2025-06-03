@@ -11,7 +11,7 @@ Here lives a Helm Chart to produce applicationand applicationsets for our cluste
 To deploy the base applicationset for a cluster use:
 
 ```
-helm template . -f ../../surveillance-green/applicationset-values.yaml | k apply -f -
+helm template . -f ../../clusters/surveillance-green/applicationset-values.yaml | k apply -f -
 ```
 
 ## Clusters/
