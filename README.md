@@ -11,7 +11,9 @@ Since we are using release-please, and want to target specific versions of our a
 To deploy the base applicationset for a cluster use:
 
 ```
-helm template . -f ../../surveillance-green/applicationset-values.yaml | k apply -f -
+k apply -f ./clusters/<desired-cluster-name>/do_not_touch/management.application.yaml
 ```
 
 ## Clusters/
+
+The ```./clusters``` directory contains sub-directories nammed as our clusters. In each cluster sub-directory are the values for ou Helmapp-management Chart. This chart will be deployed by the application defined in the cluster ```/do_not_touch/management.application.yaml```. 
