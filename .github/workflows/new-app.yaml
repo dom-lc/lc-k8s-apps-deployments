@@ -1,0 +1,33 @@
+name: Test New App
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  new-app:
+    runs-on: surveillance-hosted-k8s-apps
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Checkout lc-k8s-apps repository
+        uses: actions/checkout@v3
+        with:
+          repository: dom-lc/lc-k8s-apps
+          path: lc-k8s-apps
+
+      - name: Setup Kubectl
+        uses: azure/setup-kubectl@v1
+        with:
+          version: v1.28.0
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.10.0
+
+      - name: Helm template new app
+        run: |
+          helm template ./lc-k8s-apps \
+            -f ./clusters/surveillance-green/new-app.application.yaml
