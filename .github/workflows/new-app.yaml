@@ -29,5 +29,4 @@ jobs:
 
       - name: Helm template new app
         run: |
-          helm template ./lc-k8s-apps \
-            -f ./clusters/surveillance-green/new-app.application.yaml
+          helm template ./charts/app-management/. -f ./clusters/surveillance-green/new-app.application.yaml
