@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: {{ .Values.applicationset.name }}
+  name: k8s-apps
   namespace: argocd
 spec:
   generators:
@@ -19,14 +19,14 @@ spec:
     spec:
       project: default
       sources:
-        - repoURL: {{ .Values.applicationset.sources.chartRepo.repoUrl }}
+        - repoURL: https://github.com/dom-lc/lc-k8s-apps-deployments.git
           targetRevision: '{{`{{version}}`}}'
           path: 'charts/{{`{{name}}`}}'
           helm:
             valueFiles:
               - $values/{{`{{name}}`}}/{{ $.Values.applicationset.sources.valuesRepo.valuesFile }}
-        - repoURL: {{ .Values.applicationset.sources.valuesRepo.repoUrl }}
-          targetRevision: {{ .Values.applicationset.sources.valuesRepo.targetRevision }}
+        - repoURL: https://github.com/dom-lc/lc-k8s-apps-values.git
+          targetRevision: HEAD
           ref: values
       destination:
         server: https://kubernetes.default.svc
@@ -36,27 +36,18 @@ spec:
           prune: true
           selfHeal: true
         syncOptions:
-        {{- range .Values.applicationset.syncOptions }}
-          - {{ . }}
-        {{- end }}
+          - CreateNamespace=true
+          - ServerSideApply=true
       ignoreDifferences:
-      {{- range .Values.applicationset.ignoreDifferences }}
-        - group: {{ .group | quote }}
-          kind: {{ .kind | quote }}
-          {{- if .namespace }}
-          namespace: {{ .namespace | quote }}
-          {{- end }}
-          {{- if .jsonPointers }}
-          jsonPointers:
-          {{- range .jsonPointers }}
-            - {{ . | quote }}
-          {{- end }}
-          {{- end }}
-          {{- if .jqPathExpressions }}
-          jqPathExpressions:
-          {{- range .jqPathExpressions }}
-            - {{ . | quote }}
-          {{- end }}
-          {{- end }}
-      {{- end}}
+      - group: "apps"
+        kind: "Secret"
+        jsonPointers:
+          - "/data"
+      - group: "external-secrets.io"
+        kind: "ExternalSecret"
+        namespace: "actions-runner-system"
+        jqPathExpressions:
+          - ".spec.data[].remoteRef.conversionStrategy"
+          - ".spec.data[].remoteRef.decodingStrategy"
+          - ".spec.data[].remoteRef.metadataPolicy"
 {{- end }}

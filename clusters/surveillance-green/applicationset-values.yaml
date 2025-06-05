@@ -1,7 +1,8 @@
+# This file is used to define the values for the Argo CD ApplicationSet
+# It is used in conjoncture with the app-management Chart to create an ApplicationSet
+# This file defines values for the surveillance-green cluster.
 applicationset:
   enabled: true
-  name: k8s-apps
-  chartRepo: https://github.com/dom-lc/lc-k8s-apps.git
   generators:
     # The List generator allows you to target Argo CD Applications to clusters based on a fixed list of any chosen key/value element pairs.
     # We will be using the list to choose the targetRevion for each application
@@ -14,7 +15,7 @@ applicationset:
         - name: cert-manager
           version: cert-manager-v0.1.0
         - name: reflector
-          version: reflector-v0.2.0
+          version: reflector-v0.1.0
         - name: actions-runner-system
           version: actions-runner-system-v0.1.0
         - name: external-secrets
@@ -23,30 +24,5 @@ applicationset:
   # Note that these files are relative to the root of the Git repository
   # and should be present in the directories specified above
   sources:
-    chartRepo: 
-      repoUrl: https://github.com/dom-lc/lc-k8s-apps.git
-    valuesRepo:
-      # Repository containing your your Helm Values files
-      repoUrl: https://github.com/dom-lc/lc-k8s-apps-values.git
-      targetRevision: HEAD
       # Name of values file
       valuesFile: values-surveillance-green.yaml
-  # Sync options for the application
-  # Note that these options are used for the sync policy of the application
-  syncOptions:
-    - CreateNamespace=true
-    - ServerSideApply=true
-  ignoreDifferences:
-    # This is the list of fields to ignore for the application
-    # Note that these fields are used for the ignore differences policy of the application
-    - group: apps
-      kind: Secret
-      jsonPointers:
-        - /data
-    - group: external-secrets.io
-      kind: ExternalSecret
-      namespace: actions-runner-system
-      jqPathExpressions:
-        - '.spec.data[].remoteRef.conversionStrategy'
-        - '.spec.data[].remoteRef.decodingStrategy'
-        - '.spec.data[].remoteRef.metadataPolicy'

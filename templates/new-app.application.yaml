@@ -1,0 +1,16 @@
+# new application values template
+# This will deploy your application to the surveillance-green cluster
+# The purpose is to validate your new application before releasing it
+application:
+  enabled: true
+  # Your new application name
+  # Must match the name of your folder in charts/<application-name> of the k8s-apps repository
+  name: new-app
+  # Your new application branch name
+  # Must match the branch name you are working on for the new application in the k8s-apps repository
+  branchName: feature/new-app
+  helm:
+    # The values file to use for your new application
+    # Must match the name of your values file in charts/<application-name>/values of the k8s-apps repository
+    # Usually this is values.yaml as your set your default values in values.yaml of the k8s-apps repository
+    valuesFile: values.yaml

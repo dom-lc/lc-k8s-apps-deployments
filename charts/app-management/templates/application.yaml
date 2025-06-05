@@ -7,15 +7,12 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: {{ .Values.application.sources.chartRepo.repoUrl }}
-      targetRevision: {{ .Values.application.sources.chartRepo.targetRevision }}
+    - repoURL: https://github.com/dom-lc/lc-k8s-apps-deployments.git
+      targetRevision: {{ .Values.application.branchName }}
       path: charts/{{ .Values.application.name }}
       helm:
         valueFiles:
-          - $values/{{ .Values.application.name }}/{{ .Values.application.sources.valuesRepo.valuesFile }}
-    - repoURL: {{ .Values.application.sources.valuesRepo.repoUrl }}
-      targetRevision: {{ .Values.application.sources.valuesRepo.targetRevision }}
-      ref: values
+          - $values/{{ .Values.application.name }}/{{ .Values.application.helm.valuesFile }}
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
