@@ -28,8 +28,3 @@ jobs:
       - name: Delete ArgoCD Test Application
         run: |
           kubectl delete application "$APP_NAME" -n argocd
-
-      # Remove the new app test application created in test Phase
-      - name: Remove the test application
-        run: |
-          kubectl destroy application -n argocd
