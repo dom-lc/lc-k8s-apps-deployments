@@ -21,3 +21,7 @@ The ```./clusters``` directory contains sub-directories nammed as our clusters. 
 ## Testing a New Application
 
 In order to test a new application, first create a branch for your new application. Copy the ```./templates/new-application.yaml``` and paste it in the ```./clusters/surveillance-green/``` folder. Fill in your application name and branch name.
+
+### Test Phase
+
+Your are now ready to test your application. Run the ```Test New Application``` workflow selecting your current new branch  to apply it. This workflow will first validate your Helm Chart and values doing a Helm template; If the template succeeds, it will then produce an an argocd application to deploy your app. The app is now running in the surveillance green cluster and you can check that all is in order with it.
