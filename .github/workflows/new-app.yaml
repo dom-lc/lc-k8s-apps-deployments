@@ -18,14 +18,11 @@ jobs:
           path: lc-k8s-apps
 
       - name: Setup Kubectl
-        uses: azure/setup-kubectl@v1
-        with:
-          version: v1.28.0
+        uses: azure/setup-kubectl@v4
 
       - name: Setup Helm
-        uses: azure/setup-helm@v1
-        with:
-          version: v3.10.0
+        uses: azure/setup-helm@v4.3.0
+  
 
       - name: Helm template new app
         run: |
