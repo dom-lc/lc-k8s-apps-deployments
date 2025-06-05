@@ -5,7 +5,7 @@ on:
 
 jobs:
   new-app:
-    runs-on: surveillance-hosted-k8s-apps
+    runs-on: surveillance-hosted-k8s-apps-deployments
     
     steps:
       - name: Checkout repository
