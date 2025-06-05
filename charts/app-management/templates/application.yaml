@@ -12,7 +12,7 @@ spec:
       path: charts/{{ .Values.application.name }}
       helm:
         valueFiles:
-          - $values/{{ .Values.application.name }}/{{ .Values.application.helm.valuesFile }}
+          - {{ .Values.application.helm.valuesFile }}
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
