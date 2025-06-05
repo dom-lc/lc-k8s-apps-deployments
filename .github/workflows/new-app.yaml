@@ -27,3 +27,7 @@ jobs:
       - name: Helm template new app
         run: |
           helm template ./charts/app-management/. -f ./clusters/surveillance-green/new-app.application.yaml
+    
+      - name: Kubectl apply rendered manifest
+        run: |
+          helm template ./charts/app-management/. -f ./clusters/surveillance-green/new-app.application.yaml | kubectl apply -f -
