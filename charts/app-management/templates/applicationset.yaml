@@ -24,7 +24,7 @@ spec:
           path: 'charts/{{`{{name}}`}}'
           helm:
             valueFiles:
-              - $values/{{`{{name}}`}}/{{ $.Values.applicationset.sources.valuesRepo.valuesFile }}
+              - $values/{{`{{name}}`}}/{{ $.Values.applicationset.sources.valuesFile }}
         - repoURL: https://github.com/dom-lc/lc-k8s-apps-values.git
           targetRevision: HEAD
           ref: values
