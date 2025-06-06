@@ -19,7 +19,7 @@ spec:
     spec:
       project: default
       sources:
-        - repoURL: https://github.com/dom-lc/lc-k8s-apps-deployments.git
+        - repoURL: https://github.com/dom-lc/lc-k8s-apps.git
           targetRevision: '{{`{{version}}`}}'
           path: 'charts/{{`{{name}}`}}'
           helm:
