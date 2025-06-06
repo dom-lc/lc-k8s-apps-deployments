@@ -8,7 +8,7 @@ spec:
   project: default
   sources:
     - repoURL: https://github.com/dom-lc/lc-k8s-apps-deployments.git
-      targetRevision: list_generator
+      targetRevision: lc_values
       path: charts/app-management
       helm:
         valueFiles:
