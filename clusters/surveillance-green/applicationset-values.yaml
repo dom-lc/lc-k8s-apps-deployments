@@ -21,7 +21,7 @@ applicationset:
         - name: external-secrets
           version: external-secrets-v0.1.0
         - name: py-show-vars
-          version: py-show-vars-v0.3.0
+          version: py-show-vars-v0.4.0
   # This is the list of Helm value files to use for the application
   # Note that these files are relative to the root of the Git repository
   # and should be present in the directories specified above
